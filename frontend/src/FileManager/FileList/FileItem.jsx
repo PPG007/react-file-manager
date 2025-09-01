@@ -9,6 +9,7 @@ import { useFileNavigation } from "../../contexts/FileNavigationContext";
 import { useSelection } from "../../contexts/SelectionContext";
 import { useClipBoard } from "../../contexts/ClipboardContext";
 import { useLayout } from "../../contexts/LayoutContext";
+import { useIcon } from "../../contexts/IconContext";
 import Checkbox from "../../components/Checkbox/Checkbox";
 
 const dragIconSize = 50;
@@ -34,7 +35,11 @@ const FileItem = ({
   const [tooltipPosition, setTooltipPosition] = useState(null);
 
   const { activeLayout } = useLayout();
-  const iconSize = activeLayout === "grid" ? 48 : 20;
+  let iconSize = activeLayout === "grid" ? 48 : 20;
+  const { size } = useIcon();
+  if (size) {
+    iconSize = size;
+  }
   const fileIcons = useFileIcons(iconSize);
   const { setCurrentPath, currentPathFiles, onFolderChange } = useFileNavigation();
   const { setSelectedFiles } = useSelection();
@@ -184,6 +189,15 @@ const FileItem = ({
     setCheckboxClassName(selectedFileIndexes.includes(index) ? "visible" : "hidden");
   }, [selectedFileIndexes]);
 
+  const fileExt = file.name?.split(".").pop()?.toLowerCase();
+  let iconNode = fileIcons[fileExt] ?? <FaRegFile size={iconSize} />;
+  const imgPreview = (file) => {
+    return <img src={file.url} alt={file.name} className="file-item-img-preview" />;
+  }
+  if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
+    iconNode = imgPreview(file);
+  }
+
   return (
     <div
       className={`file-item-container ${dropZoneClass} ${
@@ -219,7 +233,7 @@ const FileItem = ({
           <FaRegFolderOpen size={iconSize} />
         ) : (
           <>
-            {fileIcons[file.name?.split(".").pop()?.toLowerCase()] ?? <FaRegFile size={iconSize} />}
+            {iconNode}
           </>
         )}
 
