@@ -192,7 +192,7 @@ const FileItem = ({
   const fileExt = file.name?.split(".").pop()?.toLowerCase();
   let iconNode = fileIcons[fileExt] ?? <FaRegFile size={iconSize} />;
   const imgPreview = (file) => {
-    return <img src={file.url} alt={file.name} className="file-item-img-preview" />;
+    return <img src={file.url} alt={file.name} className="file-item-img-preview" width={`${iconSize}px`} height={`${iconSize}px`}/>;
   }
   if (['jpg', 'jpeg', 'png'].includes(fileExt)) {
     iconNode = imgPreview(file);

@@ -18,7 +18,7 @@ import { validateApiCallback } from "../../utils/validateApiCallback";
 import { useTranslation } from "../../contexts/TranslationProvider";
 import "./Toolbar.scss";
 
-const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions }) => {
+const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUploadClick }) => {
   const [showToggleViewMenu, setShowToggleViewMenu] = useState(false);
   const { currentFolder } = useFileNavigation();
   const { selectedFiles, setSelectedFiles, handleDownload } = useSelection();
@@ -38,7 +38,13 @@ const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions }) => {
       icon: <MdOutlineFileUpload size={18} />,
       text: t("upload"),
       permission: permissions.upload,
-      onClick: () => triggerAction.show("uploadFile"),
+      onClick: () => onUploadClick('file', currentFolder),
+    },
+    {
+      icon: <MdOutlineFileUpload size={18} />,
+      text: t("uploadDir"),
+      permission: permissions.upload,
+      onClick: () => onUploadClick('dir', currentFolder),
     },
     {
       icon: <FaRegPaste size={18} />,

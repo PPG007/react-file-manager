@@ -13,7 +13,7 @@ import { duplicateNameHandler } from "../../utils/duplicateNameHandler";
 import { validateApiCallback } from "../../utils/validateApiCallback";
 import { useTranslation } from "../../contexts/TranslationProvider";
 
-const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen) => {
+const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen, onUploadClick) => {
   const [selectedFileIndexes, setSelectedFileIndexes] = useState([]);
   const [visible, setVisible] = useState(false);
   const [isSelectionCtx, setIsSelectionCtx] = useState(false);
@@ -22,7 +22,7 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
 
   const { clipBoard, setClipBoard, handleCutCopy, handlePasting } = useClipBoard();
   const { selectedFiles, setSelectedFiles, handleDownload } = useSelection();
-  const { currentPath, setCurrentPath, currentPathFiles, setCurrentPathFiles, onFolderChange } =
+  const { currentPath, setCurrentPath, currentPathFiles, setCurrentPathFiles, onFolderChange, currentFolder } =
     useFileNavigation();
   const { activeLayout, setActiveLayout } = useLayout();
   const t = useTranslation();
@@ -77,9 +77,11 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
     setVisible(false);
   };
 
-  const handleUpload = () => {
-    setVisible(false);
-    triggerAction.show("uploadFile");
+  const handleUpload = (type) => {
+    return () => {
+      setVisible(false);
+      onUploadClick(type, currentFolder);
+    }
   };
 
   const handleselectAllFiles = () => {
@@ -129,7 +131,13 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
     {
       title: t("upload"),
       icon: <MdOutlineFileUpload size={18} />,
-      onClick: handleUpload,
+      onClick: handleUpload("file"),
+      hidden: !permissions.upload,
+    },
+    {
+      title: t("uploadDir"),
+      icon: <MdOutlineFileUpload size={18} />,
+      onClick: handleUpload("dir"),
       divider: true,
       hidden: !permissions.upload,
     },

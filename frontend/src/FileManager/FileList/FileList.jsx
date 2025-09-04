@@ -14,6 +14,7 @@ const FileList = ({
   onRename,
   onFileOpen,
   onRefresh,
+  onUploadClick,
   enableFilePreview,
   triggerAction,
   permissions,
@@ -34,7 +35,7 @@ const FileList = ({
     selectedFileIndexes,
     clickPosition,
     isSelectionCtx,
-  } = useFileList(onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen);
+  } = useFileList(onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen, onUploadClick);
 
   const contextMenuRef = useDetectOutsideClick(() => setVisible(false));
 

@@ -38,6 +38,7 @@ const FileManager = ({
   onFolderChange = () => { },
   onSelect,
   onError = () => { },
+  onUploadClick = () => {},
   layout = "grid",
   enableFilePreview = true,
   maxFileSize,
@@ -56,7 +57,7 @@ const FileManager = ({
   iconSize = 48,
 }) => {
   const [isNavigationPaneOpen, setNavigationPaneOpen] = useState(defaultNavExpanded);
-  const triggerAction = useTriggerAction();
+  const triggerAction = useTriggerAction(onUploadClick);
   const { containerRef, colSizes, isDragging, handleMouseMove, handleMouseUp, handleMouseDown } =
     useColumnResize(20, 80);
   const customStyles = {
@@ -86,6 +87,7 @@ const FileManager = ({
                       onRefresh={onRefresh}
                       triggerAction={triggerAction}
                       permissions={permissions}
+                      onUploadClick={onUploadClick}
                     />
                     <section
                       ref={containerRef}
@@ -120,6 +122,7 @@ const FileManager = ({
                           onRename={onRename}
                           onFileOpen={onFileOpen}
                           onRefresh={onRefresh}
+                          onUploadClick={onUploadClick}
                           enableFilePreview={enableFilePreview}
                           triggerAction={triggerAction}
                           permissions={permissions}
@@ -184,6 +187,7 @@ FileManager.propTypes = {
   onFolderChange: PropTypes.func,
   onSelect: PropTypes.func,
   onError: PropTypes.func,
+  onUploadClick: PropTypes.func,
   layout: PropTypes.oneOf(["grid", "list"]),
   maxFileSize: PropTypes.number,
   enableFilePreview: PropTypes.bool,
