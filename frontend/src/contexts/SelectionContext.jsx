@@ -7,7 +7,7 @@ export const SelectionProvider = ({ children, onDownload, onSelect }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   useEffect(() => {
-    if (selectedFiles.length && onSelect) {
+    if (onSelect) {
       onSelect(selectedFiles);
     }
   }, [selectedFiles]);
