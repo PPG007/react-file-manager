@@ -42,7 +42,7 @@ const FileItem = ({
   }
   const fileIcons = useFileIcons(iconSize);
   const { setCurrentPath, currentPathFiles, onFolderChange } = useFileNavigation();
-  const { setSelectedFiles } = useSelection();
+  const { setSelectedFiles, setFileToPreview } = useSelection();
   const { clipBoard, handleCutCopy, setClipBoard, handlePasting } = useClipBoard();
   const dragIconRef = useRef(null);
   const dragIcons = useFileIcons(dragIconSize);
@@ -87,9 +87,9 @@ const FileItem = ({
         }
         return filteredFiles;
       });
-    } else {
-      setSelectedFiles([file]);
-    }
+    } //else {
+      //setSelectedFiles([file]);
+    //}
   };
 
   const handleFileSelection = (e) => {
@@ -100,6 +100,7 @@ const FileItem = ({
 
     const currentTime = new Date().getTime();
     if (currentTime - lastClickTime < 300) {
+      setFileToPreview(file)
       handleFileAccess();
       return;
     }
@@ -226,7 +227,7 @@ const FileItem = ({
             checked={fileSelected}
             className={`selection-checkbox ${checkboxClassName}`}
             onChange={handleCheckboxChange}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {e.stopPropagation()}}
           />
         )}
         {file.isDirectory ? (

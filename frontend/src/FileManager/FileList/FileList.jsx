@@ -15,6 +15,7 @@ const FileList = ({
   onFileOpen,
   onRefresh,
   onUploadClick,
+  onConvertPDF,
   enableFilePreview,
   triggerAction,
   permissions,
@@ -35,7 +36,7 @@ const FileList = ({
     selectedFileIndexes,
     clickPosition,
     isSelectionCtx,
-  } = useFileList(onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen, onUploadClick);
+  } = useFileList(onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen, onUploadClick, onConvertPDF);
 
   const contextMenuRef = useDetectOutsideClick(() => setVisible(false));
 
@@ -52,7 +53,6 @@ const FileList = ({
       ref={filesViewRef}
       className={`files ${activeLayout}`}
       onContextMenu={handleContextMenu}
-      onClick={unselectFiles}
     >
       {activeLayout === "list" && (
         <FilesHeader unselectFiles={unselectFiles} onSort={handleSort} sortConfig={sortConfig} />

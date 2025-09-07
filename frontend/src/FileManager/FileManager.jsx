@@ -15,11 +15,11 @@ import { useColumnResize } from "../hooks/useColumnResize";
 import PropTypes from "prop-types";
 import { dateStringValidator, urlValidator } from "../validators/propValidators";
 import { TranslationProvider } from "../contexts/TranslationProvider";
-import { useMemo, useState } from "react";
+import { useMemo, useState, forwardRef } from "react";
 import { defaultPermissions } from "../constants";
 import "./FileManager.scss";
 
-const FileManager = ({
+const FileManager = forwardRef(({
   files,
   fileUploadConfig,
   isLoading,
@@ -39,6 +39,8 @@ const FileManager = ({
   onSelect,
   onError = () => { },
   onUploadClick = () => {},
+  onConfirm = () => {},
+  onConvertPDF = () => {},
   layout = "grid",
   enableFilePreview = true,
   maxFileSize,
@@ -55,7 +57,7 @@ const FileManager = ({
   collapsibleNav = false,
   defaultNavExpanded = true,
   iconSize = 48,
-}) => {
+}, ref) => {
   const [isNavigationPaneOpen, setNavigationPaneOpen] = useState(defaultNavExpanded);
   const triggerAction = useTriggerAction(onUploadClick);
   const { containerRef, colSizes, isDragging, handleMouseMove, handleMouseUp, handleMouseDown } =
@@ -78,7 +80,7 @@ const FileManager = ({
       <TranslationProvider language={language}>
         <FilesProvider filesData={files} onError={onError}>
           <FileNavigationProvider initialPath={initialPath} onFolderChange={onFolderChange}>
-            <SelectionProvider onDownload={onDownload} onSelect={onSelect}>
+            <SelectionProvider ref={ref} onDownload={onDownload} onSelect={onSelect}>
               <ClipBoardProvider onPaste={onPaste} onCut={onCut} onCopy={onCopy}>
                 <IconProvider iconSize={iconSize}>
                   <LayoutProvider layout={layout}>
@@ -88,6 +90,7 @@ const FileManager = ({
                       triggerAction={triggerAction}
                       permissions={permissions}
                       onUploadClick={onUploadClick}
+                      onConfirm={onConfirm}
                     />
                     <section
                       ref={containerRef}
@@ -123,6 +126,7 @@ const FileManager = ({
                           onFileOpen={onFileOpen}
                           onRefresh={onRefresh}
                           onUploadClick={onUploadClick}
+                          onConvertPDF={onConvertPDF}
                           enableFilePreview={enableFilePreview}
                           triggerAction={triggerAction}
                           permissions={permissions}
@@ -152,7 +156,7 @@ const FileManager = ({
       </TranslationProvider>
     </main>
   );
-};
+});
 
 FileManager.displayName = "FileManager";
 
@@ -188,6 +192,8 @@ FileManager.propTypes = {
   onSelect: PropTypes.func,
   onError: PropTypes.func,
   onUploadClick: PropTypes.func,
+  onConfirm: PropTypes.func,
+  onConvertPDF: PropTypes.func,
   layout: PropTypes.oneOf(["grid", "list"]),
   maxFileSize: PropTypes.number,
   enableFilePreview: PropTypes.bool,

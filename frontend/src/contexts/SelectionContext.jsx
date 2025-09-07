@@ -1,10 +1,17 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
 import { validateApiCallback } from "../utils/validateApiCallback";
 
 const SelectionContext = createContext();
 
-export const SelectionProvider = ({ children, onDownload, onSelect }) => {
+export const SelectionProvider = forwardRef(({ children, onDownload, onSelect }, ref) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [fileToPreview, setFileToPreview] = useState();
+
+  useImperativeHandle(ref, () => {
+    return {
+      setSelectedFiles
+    }
+  })
 
   useEffect(() => {
     if (onSelect) {
@@ -17,10 +24,12 @@ export const SelectionProvider = ({ children, onDownload, onSelect }) => {
   };
 
   return (
-    <SelectionContext.Provider value={{ selectedFiles, setSelectedFiles, handleDownload }}>
+    <SelectionContext.Provider value={{ selectedFiles, setSelectedFiles, handleDownload, fileToPreview, setFileToPreview }}>
       {children}
     </SelectionContext.Provider>
   );
-};
+});
+
+SelectionProvider.displayName = "SelectionProvider";
 
 export const useSelection = () => useContext(SelectionContext);

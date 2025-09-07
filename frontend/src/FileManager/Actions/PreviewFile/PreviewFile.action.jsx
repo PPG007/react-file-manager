@@ -18,15 +18,15 @@ const iFrameExtensions = ["txt", "pdf"];
 const PreviewFileAction = ({ filePreviewPath, filePreviewComponent }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const { selectedFiles, handleDownload: customDownload } = useSelection();
+  const { fileToPreview, handleDownload: customDownload } = useSelection();
   const fileIcons = useFileIcons(73);
-  const extension = getFileExtension(selectedFiles[0].name)?.toLowerCase();
-  const filePath = `${filePreviewPath}${selectedFiles[0].path}`;
+  const extension = getFileExtension(fileToPreview.name)?.toLowerCase();
+  const filePath = `${filePreviewPath}${fileToPreview.path}`;
   const t = useTranslation();
 
   // Custom file preview component
   const customPreview = useMemo(
-    () => filePreviewComponent?.(selectedFiles[0]),
+    () => filePreviewComponent?.(fileToPreview),
     [filePreviewComponent]
   );
 
@@ -65,9 +65,9 @@ const PreviewFileAction = ({ filePreviewPath, filePreviewComponent }) => {
             <span className="error-icon">{fileIcons[extension] ?? <FaRegFileAlt size={73} />}</span>
             <span className="error-msg">{t("previewUnavailable")}</span>
             <div className="file-info">
-              <span className="file-name">{selectedFiles[0].name}</span>
-              {selectedFiles[0].size && <span>-</span>}
-              <span className="file-size">{getDataSize(selectedFiles[0].size)}</span>
+              <span className="file-name">{fileToPreview.name}</span>
+              {fileToPreview.size && <span>-</span>}
+              <span className="file-size">{getDataSize(fileToPreview.size)}</span>
             </div>
             <Button onClick={handleDownload} padding="0.45rem .9rem">
               <div className="download-btn">

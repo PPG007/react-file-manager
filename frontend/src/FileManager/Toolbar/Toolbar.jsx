@@ -7,6 +7,9 @@ import {
   MdOutlineFileDownload,
   MdOutlineFileUpload,
 } from "react-icons/md";
+import {
+  GiConfirmed
+} from 'react-icons/gi'
 import { BiRename } from "react-icons/bi";
 import { FaListUl, FaRegPaste } from "react-icons/fa6";
 import LayoutToggler from "./LayoutToggler";
@@ -18,7 +21,7 @@ import { validateApiCallback } from "../../utils/validateApiCallback";
 import { useTranslation } from "../../contexts/TranslationProvider";
 import "./Toolbar.scss";
 
-const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUploadClick }) => {
+const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUploadClick, onConfirm }) => {
   const [showToggleViewMenu, setShowToggleViewMenu] = useState(false);
   const { currentFolder } = useFileNavigation();
   const { selectedFiles, setSelectedFiles, handleDownload } = useSelection();
@@ -129,6 +132,15 @@ const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUplo
               >
                 <MdOutlineDelete size={19} />
                 <span>{t("delete")}</span>
+              </button>
+            )}
+            {permissions.selectConfirm && (
+              <button
+                className="item-action file-action"
+                onClick={onConfirm}
+              >
+                <GiConfirmed size={19} />
+                <span>{t("selectConfirm")}</span>
               </button>
             )}
           </div>

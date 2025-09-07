@@ -2,6 +2,7 @@ import { BiRename, BiSelectMultiple } from "react-icons/bi";
 import { BsCopy, BsFolderPlus, BsGrid, BsScissors } from "react-icons/bs";
 import { FaListUl, FaRegFile, FaRegPaste } from "react-icons/fa6";
 import { FiRefreshCw } from "react-icons/fi";
+import { SiConvertio } from 'react-icons/si'
 import { MdOutlineDelete, MdOutlineFileDownload, MdOutlineFileUpload } from "react-icons/md";
 import { PiFolderOpen } from "react-icons/pi";
 import { useClipBoard } from "../../contexts/ClipboardContext";
@@ -13,7 +14,7 @@ import { duplicateNameHandler } from "../../utils/duplicateNameHandler";
 import { validateApiCallback } from "../../utils/validateApiCallback";
 import { useTranslation } from "../../contexts/TranslationProvider";
 
-const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen, onUploadClick) => {
+const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, onFileOpen, onUploadClick, onConvertPDF) => {
   const [selectedFileIndexes, setSelectedFileIndexes] = useState([]);
   const [visible, setVisible] = useState(false);
   const [isSelectionCtx, setIsSelectionCtx] = useState(false);
@@ -89,6 +90,10 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
     setVisible(false);
   };
 
+  const handleConvertPDF = () => {
+    onConvertPDF(lastSelectedFile);
+  }
+
   const emptySelecCtxItems = [
     {
       title: t("view"),
@@ -153,7 +158,13 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
       title: t("open"),
       icon: lastSelectedFile?.isDirectory ? <PiFolderOpen size={20} /> : <FaRegFile size={16} />,
       onClick: handleFileOpen,
+    },
+    {
+      title: t("convertPDFToImg"),
+      icon: <SiConvertio />,
+      onClick: handleConvertPDF,
       divider: true,
+      hidden: !lastSelectedFile?.name.endsWith('.pdf')
     },
     {
       title: t("cut"),
