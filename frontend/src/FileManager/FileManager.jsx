@@ -15,7 +15,7 @@ import { useColumnResize } from "../hooks/useColumnResize";
 import PropTypes from "prop-types";
 import { dateStringValidator, urlValidator } from "../validators/propValidators";
 import { TranslationProvider } from "../contexts/TranslationProvider";
-import { useMemo, useState, forwardRef } from "react";
+import { useMemo, useState, forwardRef, useRef, useImperativeHandle } from "react";
 import { defaultPermissions } from "../constants";
 import "./FileManager.scss";
 
@@ -41,6 +41,9 @@ const FileManager = forwardRef(({
   onUploadClick = () => {},
   onConfirm = () => {},
   onConvertPDF = () => {},
+  onPrev = () => {},
+  onNext = () => {},
+  allowCreateInRoot = false,
   layout = "grid",
   enableFilePreview = true,
   maxFileSize,
@@ -79,8 +82,8 @@ const FileManager = forwardRef(({
       <Loader loading={isLoading} />
       <TranslationProvider language={language}>
         <FilesProvider filesData={files} onError={onError}>
-          <FileNavigationProvider initialPath={initialPath} onFolderChange={onFolderChange}>
-            <SelectionProvider ref={ref} onDownload={onDownload} onSelect={onSelect}>
+          <FileNavigationProvider initialPath={initialPath} onFolderChange={onFolderChange} ref={el => ref.current.fileNavigation = el}>
+            <SelectionProvider ref={el => ref.current.selection = el} onDownload={onDownload} onSelect={onSelect} triggerAction={triggerAction}>
               <ClipBoardProvider onPaste={onPaste} onCut={onCut} onCopy={onCopy}>
                 <IconProvider iconSize={iconSize}>
                   <LayoutProvider layout={layout}>
@@ -140,6 +143,8 @@ const FileManager = forwardRef(({
                       onFileUploaded={onFileUploaded}
                       onDelete={onDelete}
                       onRefresh={onRefresh}
+                      onPrev={onPrev}
+                      onNext={onNext}
                       maxFileSize={maxFileSize}
                       filePreviewPath={filePreviewPath}
                       filePreviewComponent={filePreviewComponent}
@@ -194,6 +199,9 @@ FileManager.propTypes = {
   onUploadClick: PropTypes.func,
   onConfirm: PropTypes.func,
   onConvertPDF: PropTypes.func,
+  onPrev: PropTypes.func,
+  onNext: PropTypes.func,
+  allowCreateInRoot: PropTypes.bool,
   layout: PropTypes.oneOf(["grid", "list"]),
   maxFileSize: PropTypes.number,
   enableFilePreview: PropTypes.bool,

@@ -37,7 +37,7 @@ const FileItem = ({
   const { activeLayout } = useLayout();
   let iconSize = activeLayout === "grid" ? 48 : 20;
   const { size } = useIcon();
-  if (size) {
+  if (size && activeLayout === "grid") {
     iconSize = size;
   }
   const fileIcons = useFileIcons(iconSize);

@@ -3,15 +3,17 @@ import { validateApiCallback } from "../utils/validateApiCallback";
 
 const SelectionContext = createContext();
 
-export const SelectionProvider = forwardRef(({ children, onDownload, onSelect }, ref) => {
+export const SelectionProvider = forwardRef(({ children, onDownload, onSelect, triggerAction }, ref) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fileToPreview, setFileToPreview] = useState();
 
   useImperativeHandle(ref, () => {
     return {
-      setSelectedFiles
+      setSelectedFiles,
+      setFileToPreview,
+      getFileToPreview: () => fileToPreview
     }
-  })
+  }, [fileToPreview])
 
   useEffect(() => {
     if (onSelect) {
@@ -20,7 +22,13 @@ export const SelectionProvider = forwardRef(({ children, onDownload, onSelect },
   }, [selectedFiles]);
 
   const handleDownload = () => {
-    validateApiCallback(onDownload, "onDownload", selectedFiles);
+    if (fileToPreview && triggerAction.isActive) {
+      validateApiCallback(onDownload, "onDownload", [fileToPreview]);
+      return
+    }
+    if (selectedFiles.length) {
+      validateApiCallback(onDownload, "onDownload", selectedFiles);
+    }
   };
 
   return (

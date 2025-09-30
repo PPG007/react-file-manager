@@ -92,6 +92,7 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
 
   const handleConvertPDF = () => {
     onConvertPDF(lastSelectedFile);
+    setVisible(false)
   }
 
   const emptySelecCtxItems = [
@@ -130,21 +131,21 @@ const useFileList = (onRefresh, enableFilePreview, triggerAction, permissions, o
       title: t("newFolder"),
       icon: <BsFolderPlus size={18} />,
       onClick: handleCreateNewFolder,
-      hidden: !permissions.create,
+      hidden: !permissions.create || !currentPath,
       divider: !permissions.upload,
     },
     {
       title: t("upload"),
       icon: <MdOutlineFileUpload size={18} />,
       onClick: handleUpload("file"),
-      hidden: !permissions.upload,
+      hidden: !permissions.upload || !currentPath,
     },
     {
       title: t("uploadDir"),
       icon: <MdOutlineFileUpload size={18} />,
       onClick: handleUpload("dir"),
       divider: true,
-      hidden: !permissions.upload,
+      hidden: !permissions.upload || !currentPath,
     },
     {
       title: t("selectAll"),

@@ -7,12 +7,21 @@
   border-bottom: 1px solid $border-color;
   padding: 0.3rem 1rem;
   font-size: $fm-font-size;
+  position: sticky;
+  top: 0;
 
   .fm-modal-heading {
     margin: 0;
     font-weight: bold;
     color: black;
   }
+}
+
+.fm-modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 60px;
 }
 
 .dialog[open] {

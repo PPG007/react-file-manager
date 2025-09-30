@@ -1,4 +1,4 @@
-import { MdClose } from "react-icons/md";
+import { MdClose, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "../../contexts/TranslationProvider";
 import "./Modal.scss";
@@ -7,10 +7,14 @@ const Modal = ({
   children,
   show,
   setShow,
+  onPrev,
+  onNext,
   heading,
   dialogWidth = "25%",
   contentClassName = "",
   closeButton = true,
+  prev = false,
+  next = false
 }) => {
   const modalRef = useRef(null);
   const t = useTranslation();
@@ -38,14 +42,22 @@ const Modal = ({
     >
       <div className="fm-modal-header">
         <span className="fm-modal-heading">{heading}</span>
-        {closeButton && (
-          <MdClose
-            size={18}
-            onClick={() => setShow(false)}
-            className="close-icon"
-            title={t("close")}
-          />
-        )}
+        <div className="fm-modal-buttons">
+          {
+            prev && (<MdNavigateBefore className="close-icon" size={40} onClick={() => { onPrev() }} />)
+          }
+          {
+            next && (<MdNavigateNext className="close-icon" size={40} onClick={() => { onNext() }} />)
+          }
+          {closeButton && (
+            <MdClose
+              size={40}
+              onClick={() => setShow(false)}
+              className="close-icon"
+              title={t("close")}
+            />
+          )}
+        </div>
       </div>
       {children}
     </dialog>

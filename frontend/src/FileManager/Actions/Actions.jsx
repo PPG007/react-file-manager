@@ -12,6 +12,8 @@ const Actions = ({
   onFileUploaded,
   onDelete,
   onRefresh,
+  onPrev,
+  onNext,
   maxFileSize,
   filePreviewPath,
   filePreviewComponent,
@@ -20,7 +22,7 @@ const Actions = ({
   permissions,
 }) => {
   const [activeAction, setActiveAction] = useState(null);
-  const { selectedFiles } = useSelection();
+  const { fileToPreview } = useSelection();
   const t = useTranslation();
 
 
@@ -59,13 +61,13 @@ const Actions = ({
     if (triggerAction.isActive) {
       const actionType = triggerAction.actionType;
       if (actionType === "previewFile") {
-        actionTypes[actionType].title = selectedFiles?.name ?? t("preview");
+        actionTypes[actionType].title = fileToPreview?.name ?? t("preview");
       }
       setActiveAction(actionTypes[actionType]);
     } else {
       setActiveAction(null);
     }
-  }, [triggerAction.isActive]);
+  }, [triggerAction.isActive, fileToPreview, triggerAction.actionType]);
 
   if (activeAction) {
     return (
@@ -73,6 +75,10 @@ const Actions = ({
         heading={activeAction.title}
         show={triggerAction.isActive}
         setShow={triggerAction.close}
+        prev={triggerAction.actionType === 'previewFile'}
+        next={triggerAction.actionType === 'previewFile'}
+        onPrev={onPrev}
+        onNext={onNext}
         dialogWidth={activeAction.width}
       >
         {activeAction?.component}

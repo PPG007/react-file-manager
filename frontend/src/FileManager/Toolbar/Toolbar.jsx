@@ -23,7 +23,7 @@ import "./Toolbar.scss";
 
 const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUploadClick, onConfirm }) => {
   const [showToggleViewMenu, setShowToggleViewMenu] = useState(false);
-  const { currentFolder } = useFileNavigation();
+  const { currentFolder, currentPath } = useFileNavigation();
   const { selectedFiles, setSelectedFiles, handleDownload } = useSelection();
   const { clipBoard, setClipBoard, handleCutCopy, handlePasting } = useClipBoard();
   const { activeLayout } = useLayout();
@@ -34,25 +34,25 @@ const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUplo
     {
       icon: <BsFolderPlus size={17} strokeWidth={0.3} />,
       text: t("newFolder"),
-      permission: permissions.create,
+      permission: permissions.create && currentPath,
       onClick: () => triggerAction.show("createFolder"),
     },
     {
       icon: <MdOutlineFileUpload size={18} />,
       text: t("upload"),
-      permission: permissions.upload,
+      permission: permissions.upload && currentPath,
       onClick: () => onUploadClick('file', currentFolder),
     },
     {
       icon: <MdOutlineFileUpload size={18} />,
       text: t("uploadDir"),
-      permission: permissions.upload,
+      permission: permissions.upload && currentPath,
       onClick: () => onUploadClick('dir', currentFolder),
     },
     {
       icon: <FaRegPaste size={18} />,
       text: t("paste"),
-      permission: !!clipBoard,
+      permission: !!clipBoard && currentPath,
       onClick: handleFilePasting,
     },
   ];
@@ -151,7 +151,7 @@ const Toolbar = ({ onLayoutChange, onRefresh, triggerAction, permissions, onUplo
           >
             <span>
               {selectedFiles.length}{" "}
-              {t(selectedFiles.length > 1 ? "itemsSelected" : "itemSelected")}
+              {t(selectedFiles.length > 1 ? "itemsSelected" : "itemSelected", {count : selectedFiles.length})}
             </span>
             <MdClear size={18} />
           </button>

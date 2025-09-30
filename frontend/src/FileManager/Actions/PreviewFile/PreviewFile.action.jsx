@@ -27,7 +27,7 @@ const PreviewFileAction = ({ filePreviewPath, filePreviewComponent }) => {
   // Custom file preview component
   const customPreview = useMemo(
     () => filePreviewComponent?.(fileToPreview),
-    [filePreviewComponent]
+    [filePreviewComponent, fileToPreview]
   );
 
   const handleImageLoad = () => {
